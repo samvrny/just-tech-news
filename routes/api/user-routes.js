@@ -53,6 +53,7 @@ router.post('/', (req, res) => {
 router.put('/:id', (req, res) => {
     //expects {username: 'name', email: 'email', password: 'password'}
     User.update(req.body, {
+        individualHooks: true,
         where: {
             id: req.params.id
         }
