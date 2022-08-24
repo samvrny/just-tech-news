@@ -3,9 +3,10 @@ const routes = require('./controllers');
 const sequelize = require('./config/connection');
 const path = require('path');
 const expressHandlebars = require('express-handlebars');
-const handlebars = expressHandlebars.create({});
 const session = require('express-session');
 const SequelizeStore = require('connect-session-sequelize')(session.Store);
+const helpers = require('./utils/helpers');
+const hbs = expressHandlebars.create({ helpers });
 
 const sess = {
     secret: 'A beer a day',
@@ -20,10 +21,11 @@ const sess = {
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-app.engine('handlebars', handlebars.engine);
+app.use(session(sess));
+
+app.engine('handlebars', hbs.engine);
 app.set('view engine', 'handlebars');
 
-app.use(session(sess));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
